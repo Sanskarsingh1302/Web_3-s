@@ -70,7 +70,7 @@ def get_base64_of_bin_file(bin_file):
 # Streamlit application
 def main():
     
-    logo_path = r"C:\Users\sansk\Downloads\logo (1).png" 
+    logo_path = r"logo (1).png" 
     logo_base64 = get_base64_of_bin_file(logo_path)
 
     st.markdown(
