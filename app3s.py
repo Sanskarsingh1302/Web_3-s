@@ -83,12 +83,12 @@ def main():
     )
 
     st.markdown("""<style>
-        .title1 {font-size:30px; color: #C52831; text-align: center; font-weight: bold;}
+        .title2 {font-size:30px; color: #C52831; text-align: center; font-weight: bold;}
         .title {font-size:55px; color: #4A90E2; text-align: center; font-weight: bold;}
         .subheader {font-size: 25px; color: #2C3E50;}
     </style>""", unsafe_allow_html=True)
 
-    st.markdown('<p class="title1">School of Aeronautical Engineering</p>', unsafe_allow_html=True)
+    st.markdown('<p class="title2">School of Aeronautical Engineering</p>', unsafe_allow_html=True)
     st.markdown('<p class="title">Change Detection App</p>', unsafe_allow_html=True)
     st.markdown('<p class="subheader">Upload your images below for detection</p>', unsafe_allow_html=True)
 
