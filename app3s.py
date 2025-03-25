@@ -1,4 +1,14 @@
 import streamlit as st
+from PIL import Image
+
+# Open the image
+img = Image.open("")
+
+# Set the Streamlit page config
+st.set_page_config(
+    page_title="Change_detection",
+    page_icon=img  # PIL image works fine here
+)
 import cv2
 import numpy as np
 import torch
