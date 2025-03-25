@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 
 # Open the image
-img = Image.open("")
+img = Image.open("Flux_Dev_A_serene_and_simplistic_scene_depicting_a_drone_hover_0.jpeg")
 
 # Set the Streamlit page config
 st.set_page_config(
