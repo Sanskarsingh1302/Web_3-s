@@ -367,6 +367,12 @@ def welcome_page():
     if st.button("Get Started →", key="start_button"):
         st.session_state.page = "main_app"
         st.rerun()
+    st.header("Preview of the Application", divider=True)
+
+    st.subheader("Change Detection: Analyze changes in the image", divider=True)
+    VIDEO_URL = "https://youtu.be/5MdvK1pK41o"
+    st.video(VIDEO_URL, loop=True)
+
 
 def main_app_page():
     # Original app code starts here
