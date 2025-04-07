@@ -18,7 +18,7 @@ import base64
 from skimage.metrics import structural_similarity as ssim
 
 
-
+# Track objects across images with unique IDs
 def track_objects_across_images(predictions1, predictions2, iou_threshold=0.2, score_threshold=0.3):
     """
     Track objects between two images and identify their status (added, removed, modified, unchanged)
@@ -264,29 +264,125 @@ def get_base64_of_bin_file(bin_file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-# Streamlit application
-def main():
-    
-    logo_path = r"logo (1).png" 
-    logo_base64 = get_base64_of_bin_file(logo_path)
-
-    st.markdown(
-    f"""
-    <div style="display: flex; justify-content: center;">
-        <img src="data:image/jpeg;base64,{logo_base64}" alt="logo" style="width:450px;">
-    </div>
-    """,
-    unsafe_allow_html=True
-    )
-
+# Define page functions
+def welcome_page():
+    # CSS for welcome page
     st.markdown("""<style>
-        .title2 {font-size:30px; color: #C52831; text-align: center; font-weight: bold;}
-        .title1 {font-size:55px; color: #4A90E2; text-align: center; font-weight: bold;}
+        .welcome-title {font-size:60px; color: #4A90E2; text-align: center; font-weight: bold; margin-bottom: 30px;}
+        .welcome-subtitle {font-size:24px; color: #2C3E50; text-align: center; margin-bottom: 40px;}
+        .feature-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .feature-title {font-size: 22px; font-weight: bold; color: #4A90E2; margin-bottom: 10px;}
+        .get-started-btn {
+            background-color: #4A90E2;
+            color: white;
+            font-size: 18px;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 30px auto;
+            display: block;
+            width: 200px;
+        }
+    </style>""", unsafe_allow_html=True)
+    
+    # Display the school logo if available
+    try:
+        logo_path = r"C:\Users\sansk\Downloads\logo (1).png" 
+        logo_base64 = get_base64_of_bin_file(logo_path)
+        st.markdown(
+        f"""
+        <div style="display: flex; justify-content: center;">
+            <img src="data:image/jpeg;base64,{logo_base64}" alt="logo" style="width:450px;">
+        </div>
+        """,
+        unsafe_allow_html=True
+        )
+    except Exception:
+        st.write("School of Aeronautical Engineering")
+    
+    # Welcome title and subtitle
+    st.markdown('<p class="welcome-title">Welcome to Change Detection App</p>', unsafe_allow_html=True)
+    st.markdown('<p class="welcome-subtitle">Easily identify and analyze differences between images using advanced AI techniques</p>', unsafe_allow_html=True)
+    
+    # Features section with cards
+    st.subheader("Key Features")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown('''
+        <div class="feature-card">
+            <p class="feature-title">🔍 Object Detection</p>
+            <p>Automatically detect objects in your images using state-of-the-art AI models</p>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown('''
+        <div class="feature-card">
+            <p class="feature-title">📊 Change Analysis</p>
+            <p>Get detailed statistics and visualizations about changes between images</p>
+        </div>
+        ''', unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown('''
+        <div class="feature-card">
+            <p class="feature-title">🔄 Object Tracking</p>
+            <p>Track objects across images to identify what's been added, removed, or modified</p>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown('''
+        <div class="feature-card">
+            <p class="feature-title">📈 Enhanced Visualization</p>
+            <p>See changes highlighted with intuitive color coding and detailed annotations</p>
+        </div>
+        ''', unsafe_allow_html=True)
+    
+    # How it works section
+    st.subheader("How It Works")
+    st.write("""
+    1. **Upload Images** - Select two images you want to compare
+    2. **Process Images** - Our AI analyzes both images and identifies all objects
+    3. **Track Changes** - The application tracks objects across images and categorizes changes
+    4. **Review Results** - View detailed reports and visualizations of all detected changes
+    """)
+    
+    # Sample use cases
+    st.subheader("Example Use Cases")
+    st.write("""
+    - **Surveillance & Security**: Monitor changes in security camera footage
+    - **Environmental Monitoring**: Track changes in aerial or satellite imagery
+    - **Quality Control**: Detect manufacturing defects or inconsistencies
+    - **Research & Analysis**: Compare experimental results over time
+    """)
+    
+    # Get started button
+    if st.button("Get Started →", key="start_button"):
+        st.session_state.page = "main_app"
+        st.rerun()
+
+def main_app_page():
+    # Original app code starts here
+    st.markdown("""<style>
+        .title1 {font-size:30px; color: #C52831; text-align: center; font-weight: bold;}
+        .title {font-size:55px; color: #4A90E2; text-align: center; font-weight: bold;}
         .subheader {font-size: 25px; color: #2C3E50;}
     </style>""", unsafe_allow_html=True)
 
-    st.markdown('<p class="title2">School of Aeronautical Engineering</p>', unsafe_allow_html=True)
-    st.markdown('<p class="title1">Change Detection App</p>', unsafe_allow_html=True)
+    # Add a "Back to Welcome" button at the top
+    if st.button("← Back to Welcome Page", key="back_button"):
+        st.session_state.page = "welcome"
+        st.rerun()
+
+    st.markdown('<p class="title1">School of Aeronautical Engineering</p>', unsafe_allow_html=True)
+    st.markdown('<p class="title">Change Detection App</p>', unsafe_allow_html=True)
     st.markdown('<p class="subheader">Upload your images below for detection</p>', unsafe_allow_html=True)
 
     with st.expander("How to use the app"):
@@ -386,140 +482,151 @@ def main():
             else:
                 st.write("No new objects detected.")
 
-    # Add a new button for advanced change detection
-    if uploaded_file1 is not None and uploaded_file2 is not None and st.button("Detect Changes with Tracking"):
-        # Display a loading bar
-        progress = st.progress(0)
-        
-        # Simulate progress as the processing takes place
-        for i in range(30):
-            progress.progress(i + 1)
-        
-        # Make sure images are loaded and properly processed
-        if 'image1_cv' not in locals() or 'image2_cv' not in locals():
-            st.error("Please ensure both images are uploaded properly.")
-            return
+        # Add a new button for advanced change detection
+        if st.button("Detect Changes with Tracking"):
+            # Display a loading bar
+            progress = st.progress(0)
             
-        # Ensure the preprocessing is done
-        gray1, gray2 = preprocess_images(image1_cv, image2_cv)
-        
-        # Detect changes using SSIM first
-        change_mask, diff_map = change_detection_ssim(gray1, gray2, threshold)
-        
-        progress.progress(40)
-        
-        # Detect objects in both images
-        with st.spinner("Detecting objects..."):
-            predictions1 = detect_objects(image1_cv, model, device)
-            predictions2 = detect_objects(image2_cv, model, device)
-        
-        # Show debug information about detections
-        st.write(f"Objects detected in first image: {len(predictions1[0]['boxes'])}")
-        st.write(f"Objects detected in second image: {len(predictions2[0]['boxes'])}")
-        
-        # Show confidence scores for better debugging
-        st.write("First image object confidence scores:")
-        scores1 = [f"{score:.2f}" for score in predictions1[0]['scores'].cpu().numpy()]
-        st.write(", ".join(scores1[:10]) + ("..." if len(scores1) > 10 else ""))
-        
-        st.write("Second image object confidence scores:")
-        scores2 = [f"{score:.2f}" for score in predictions2[0]['scores'].cpu().numpy()]
-        st.write(", ".join(scores2[:10]) + ("..." if len(scores2) > 10 else ""))
-        
-        progress.progress(60)
-        
-        # Use a very low IoU threshold and confidence threshold to ensure matches
-        tracked_objects = track_objects_across_images(
-            predictions1, predictions2, 
-            iou_threshold=0.2,  # Lower threshold for matching
-            score_threshold=0.3  # Lower threshold for considering objects
-        )
-        
-        progress.progress(75)
-        
-        # Check if we got any tracked objects
-        if not tracked_objects:
-            st.warning("No objects were successfully tracked between images. The images may be too different or the detection model may not be identifying the same objects.")
-            # Show the raw images side by side for comparison
+            # Simulate progress as the processing takes place
+            for i in range(30):
+                progress.progress(i + 1)
+            
+            # Make sure images are loaded and properly processed
+            if 'image1_cv' not in locals() or 'image2_cv' not in locals():
+                st.error("Please ensure both images are uploaded properly.")
+                return
+                
+            # Ensure the preprocessing is done
+            gray1, gray2 = preprocess_images(image1_cv, image2_cv)
+            
+            # Detect changes using SSIM first
+            change_mask, diff_map = change_detection_ssim(gray1, gray2, threshold)
+            
+            progress.progress(40)
+            
+            # Detect objects in both images
+            with st.spinner("Detecting objects..."):
+                predictions1 = detect_objects(image1_cv, model, device)
+                predictions2 = detect_objects(image2_cv, model, device)
+            
+            # Show debug information about detections
+            st.write(f"Objects detected in first image: {len(predictions1[0]['boxes'])}")
+            st.write(f"Objects detected in second image: {len(predictions2[0]['boxes'])}")
+            
+            # Show confidence scores for better debugging
+            st.write("First image object confidence scores:")
+            scores1 = [f"{score:.2f}" for score in predictions1[0]['scores'].cpu().numpy()]
+            st.write(", ".join(scores1[:10]) + ("..." if len(scores1) > 10 else ""))
+            
+            st.write("Second image object confidence scores:")
+            scores2 = [f"{score:.2f}" for score in predictions2[0]['scores'].cpu().numpy()]
+            st.write(", ".join(scores2[:10]) + ("..." if len(scores2) > 10 else ""))
+            
+            progress.progress(60)
+            
+            # Use a very low IoU threshold and confidence threshold to ensure matches
+            tracked_objects = track_objects_across_images(
+                predictions1, predictions2, 
+                iou_threshold=0.2,  # Lower threshold for matching
+                score_threshold=0.3  # Lower threshold for considering objects
+            )
+            
+            progress.progress(75)
+            
+            # Check if we got any tracked objects
+            if not tracked_objects:
+                st.warning("No objects were successfully tracked between images. The images may be too different or the detection model may not be identifying the same objects.")
+                # Show the raw images side by side for comparison
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.image(cv2.cvtColor(image1_cv, cv2.COLOR_BGR2RGB), caption="First Image")
+                with col2:
+                    st.image(cv2.cvtColor(image2_cv, cv2.COLOR_BGR2RGB), caption="Second Image")
+                return
+                
+            # Visualize changes
+            img1_vis, img2_vis, change_summary, change_counts = visualize_changes(
+                image1_cv.copy(), image2_cv.copy(), tracked_objects)
+            
+            # Final progress update
+            progress.progress(100)
+            
+            # Display results
+            st.subheader("Object Tracking Results")
+            
+            # Display tracked images
             col1, col2 = st.columns(2)
             with col1:
-                st.image(cv2.cvtColor(image1_cv, cv2.COLOR_BGR2RGB), caption="First Image")
+                st.image(cv2.cvtColor(img1_vis, cv2.COLOR_BGR2RGB), caption="First Image with Tracked Objects")
             with col2:
-                st.image(cv2.cvtColor(image2_cv, cv2.COLOR_BGR2RGB), caption="Second Image")
-            return
+                st.image(cv2.cvtColor(img2_vis, cv2.COLOR_BGR2RGB), caption="Second Image with Tracked Objects")
             
-        # Visualize changes
-        img1_vis, img2_vis, change_summary, change_counts = visualize_changes(
-            image1_cv.copy(), image2_cv.copy(), tracked_objects)
-        
-        # Final progress update
-        progress.progress(100)
-        
-        # Display results
-        st.subheader("Object Tracking Results")
-        
-        # Display tracked images
-        col1, col2 = st.columns(2)
-        with col1:
-            st.image(cv2.cvtColor(img1_vis, cv2.COLOR_BGR2RGB), caption="First Image with Tracked Objects")
-        with col2:
-            st.image(cv2.cvtColor(img2_vis, cv2.COLOR_BGR2RGB), caption="Second Image with Tracked Objects")
-        
-        # Display change summary
-        st.subheader("Change Classification Summary")
-        
-        # Create columns for the summary statistics
-        stat_cols = st.columns(5)
-        with stat_cols[0]:
-            st.metric("Added", change_counts['added'], None, delta_color="normal")
-        with stat_cols[1]:
-            st.metric("Removed", change_counts['removed'], None, delta_color="normal")
-        with stat_cols[2]:
-            st.metric("Modified Class", change_counts['modified_class'], None, delta_color="normal")
-        with stat_cols[3]:
-            st.metric("Modified Position", change_counts['modified_position'], None, delta_color="normal")
-        with stat_cols[4]:
-            st.metric("Unchanged", change_counts['unchanged'], None, delta_color="normal")
-        
-        # Display change distribution visualization
-        st.image(cv2.cvtColor(change_summary, cv2.COLOR_BGR2RGB), caption="Change Distribution")
-        
-        # Display detailed change report
-        st.subheader("Detailed Change Report")
-        
-        # Create an expandable section for the detailed report
-        with st.expander("View Object-by-Object Report"):
-            # Group objects by change type
-            change_groups = {'added': [], 'removed': [], 'modified_class': [], 
-                            'modified_position': [], 'unchanged': []}
+            # Display change summary
+            st.subheader("Change Classification Summary")
             
-            for obj_id, obj_data in tracked_objects.items():
-                change_groups[obj_data['status']].append((obj_id, obj_data))
+            # Create columns for the summary statistics
+            stat_cols = st.columns(5)
+            with stat_cols[0]:
+                st.metric("Added", change_counts['added'], None, delta_color="normal")
+            with stat_cols[1]:
+                st.metric("Removed", change_counts['removed'], None, delta_color="normal")
+            with stat_cols[2]:
+                st.metric("Modified Class", change_counts['modified_class'], None, delta_color="normal")
+            with stat_cols[3]:
+                st.metric("Modified Position", change_counts['modified_position'], None, delta_color="normal")
+            with stat_cols[4]:
+                st.metric("Unchanged", change_counts['unchanged'], None, delta_color="normal")
             
-            # Display groups
-            if change_groups['added']:
-                st.write("### Added Objects")
-                for obj_id, obj_data in change_groups['added']:
-                    st.write(f"- Object ID {obj_id}: Added at position {obj_data['bbox']}")
+            # Display change distribution visualization
+            st.image(cv2.cvtColor(change_summary, cv2.COLOR_BGR2RGB), caption="Change Distribution")
             
-            if change_groups['removed']:
-                st.write("### Removed Objects")
-                for obj_id, obj_data in change_groups['removed']:
-                    st.write(f"- Object ID {obj_id}: Removed from position {obj_data['bbox']}")
+            # Display detailed change report
+            st.subheader("Detailed Change Report")
             
-            if change_groups['modified_class']:
-                st.write("### Objects with Modified Class")
-                for obj_id, obj_data in change_groups['modified_class']:
-                    if 'new_label' in obj_data:
-                        st.write(f"- Object ID {obj_id}: Class changed from {obj_data['label']} to {obj_data['new_label']}")
-                    else:
-                        st.write(f"- Object ID {obj_id}: Class modified (original class: {obj_data['label']})")
-            
-            if change_groups['modified_position']:
-                st.write("### Objects with Modified Position")
-                for obj_id, obj_data in change_groups['modified_position']:
-                    st.write(f"- Object ID {obj_id}: Position/size changed at {obj_data['bbox']}")
+            # Create an expandable section for the detailed report
+            with st.expander("View Object-by-Object Report"):
+                # Group objects by change type
+                change_groups = {'added': [], 'removed': [], 'modified_class': [], 
+                                'modified_position': [], 'unchanged': []}
+                
+                for obj_id, obj_data in tracked_objects.items():
+                    change_groups[obj_data['status']].append((obj_id, obj_data))
+                
+                # Display groups
+                if change_groups['added']:
+                    st.write("### Added Objects")
+                    for obj_id, obj_data in change_groups['added']:
+                        st.write(f"- Object ID {obj_id}: Added at position {obj_data['bbox']}")
+                
+                if change_groups['removed']:
+                    st.write("### Removed Objects")
+                    for obj_id, obj_data in change_groups['removed']:
+                        st.write(f"- Object ID {obj_id}: Removed from position {obj_data['bbox']}")
+                
+                if change_groups['modified_class']:
+                    st.write("### Objects with Modified Class")
+                    for obj_id, obj_data in change_groups['modified_class']:
+                        if 'new_label' in obj_data:
+                            st.write(f"- Object ID {obj_id}: Class changed from {obj_data['label']} to {obj_data['new_label']}")
+                        else:
+                            st.write(f"- Object ID {obj_id}: Class modified (original class: {obj_data['label']})")
+                
+                if change_groups['modified_position']:
+                    st.write("### Objects with Modified Position")
+                    for obj_id, obj_data in change_groups['modified_position']:
+                        st.write(f"- Object ID {obj_id}: Position/size changed at {obj_data['bbox']}")
 
+# Main function to run the app
+def main():
+    # Initialize session state
+    if 'page' not in st.session_state:
+        st.session_state.page = "welcome"
+    
+    # Display current page
+    if st.session_state.page == "welcome":
+        welcome_page()
+    else:
+        main_app_page()
 
 if __name__ == "__main__":
     main()
