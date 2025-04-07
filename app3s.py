@@ -293,7 +293,7 @@ def welcome_page():
     
     # Display the school logo if available
     try:
-        logo_path = r"logo(1).png" 
+        logo_path = r"logo (1).png" 
         logo_base64 = get_base64_of_bin_file(logo_path)
         st.markdown(
         f"""
